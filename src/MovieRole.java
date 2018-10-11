@@ -1,19 +1,28 @@
 public class MovieRole {
 
-	private int id;
 	private MovieRoleType type;
 	private String characterName;
 	private Artist artist;
-	private Movie movie;
 	
-	public MovieRole(int id, MovieRoleType type, String characterName, Artist artist, Movie movie){
+	public MovieRole(MovieRoleType type, String characterName, Artist artist){
 		
 		this.type = type;
 		this.characterName = characterName;
 		this.artist = artist;
-		this.movie = movie;
 	}
 	
+	public MovieRoleType getType() {
+		return type;
+	}
+
+	public String getCharacterName() {
+		return characterName;
+	}
+
+	public Artist getArtist() {
+		return artist;
+	}
+
 	public enum MovieRoleType {
 		
 		Director,

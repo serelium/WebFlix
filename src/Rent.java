@@ -10,4 +10,12 @@ public class Rent {
 		this.movieCopy = movieCopy;
 		this.rentTime = rentTime;
 	}
+
+	public MovieCopy getMovieCopy() {
+		return movieCopy;
+	}
+
+	public Date getRentTime() {
+		return rentTime;
+	}
 }

@@ -1,13 +1,13 @@
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,16 +15,71 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-public class XmlDataExtracter {
+public class XmlDataExtractor {
 
-	public static ArrayList<Customer> extractCustomers(String xmlFIle) throws XmlPullParserException, IOException{
+	private HashMap<Integer, Customer> allCustomers;
+	private HashMap<Integer, Artist> allArtists;
+	private HashMap<Integer, Movie> allMovies;
+	private HashMap<Integer, MovieRole> allMovieRoles;
+	private ArrayList<MovieGenre> allMovieGenres;
+	private ArrayList<Language> allLanguages; 
+	private ArrayList<Country> allCountries;
+	private ArrayList<Scriptwriter> allScriptwriters;
+	
+	public XmlDataExtractor(String customersXmlFilePath, String artistsXmlFilePath, String moviesXmlFilePath) throws XmlPullParserException, IOException {
 		
-		ArrayList<Customer> customers = new ArrayList<Customer>();
+		allCustomers = new HashMap<Integer, Customer>();
+		allArtists = new HashMap<Integer, Artist>();
+		allMovies = new HashMap<Integer, Movie>();
+		allMovieRoles = new HashMap<Integer, MovieRole>();
+		allMovieGenres = new ArrayList<MovieGenre>();
+		allLanguages = new ArrayList<Language>();
+		allCountries = new ArrayList<Country>();
+		allScriptwriters = new ArrayList<Scriptwriter>();
+		
+		extractCustomers(customersXmlFilePath);
+		extractArtists(artistsXmlFilePath);
+		extractMovies(moviesXmlFilePath);
+	}
+
+	public HashMap<Integer, Customer> getCustomers() {
+		return allCustomers;
+	}
+
+	public HashMap<Integer, Artist> getArtists() {
+		return allArtists;
+	}
+
+	public HashMap<Integer, Movie> getMovies() {
+		return allMovies;
+	}
+
+	public HashMap<Integer, MovieRole> getMovieRoles() {
+		return allMovieRoles;
+	}
+
+	public ArrayList<MovieGenre> getMovieGenres() {
+		return allMovieGenres;
+	}
+
+	public ArrayList<Language> getLanguages() {
+		return allLanguages;
+	}
+
+	public ArrayList<Country> getCountries() {
+		return allCountries;
+	}
+	
+	public ArrayList<Scriptwriter> getScriptwriters() {
+		return allScriptwriters;
+	}
+
+	private void extractCustomers(String customersXmlFilePath) throws XmlPullParserException, IOException{
 		
 		XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
         XmlPullParser parser = factory.newPullParser();
 
-        InputStream is = new FileInputStream(xmlFIle);
+        InputStream is = new FileInputStream(customersXmlFilePath);
         parser.setInput(is, null);
 
         int eventType = parser.getEventType();
@@ -65,8 +120,11 @@ public class XmlDataExtracter {
                {   
             	   
             	   LocalDate today = java.time.LocalDate.now();
-            	   if(expiryYear > today.getYear() || (expiryYear == today.getYear() && expiryMonth > today.getMonthValue()) && expiryMonth <= 12 && expiryMonth >= 0){
+            	   if((expiryYear > today.getYear() || (expiryYear == today.getYear()) && expiryMonth > today.getMonthValue()) && expiryMonth <= 12 && expiryMonth > 0){
             	   
+            		   if(expiryMonth <=0 || expiryMonth > 12)
+            			   System.out.println("test");
+            		   
 		    	       Pattern civicNumberPattern = Pattern.compile("(\\d+)\\s+(.+)");
 		    	       Matcher civicNumberPatternMatcher = civicNumberPattern.matcher(address);
 		    	       civicNumberPatternMatcher.find();
@@ -101,7 +159,7 @@ public class XmlDataExtracter {
 		        	   CreditCard currentCreditCard = new CreditCard(CreditCard.CreditCardType.valueOf(creditCardType), creditCardNumber, expiryMonth, expiryYear);
 		        	   Person currentPerson = new Person(userId, firstName, lastName, email, currentAddress, currentBirthDate, phoneNumber.replaceAll("-", ""), password);
 		        	   
-		        	   customers.add(new Customer(currentPerson, currentSubscriptionPlan, currentCreditCard));
+		        	   allCustomers.put(currentPerson.getUserId(), new Customer(currentPerson, currentSubscriptionPlan, currentCreditCard));
             	   }
 	        	   
 	               lastName = null;
@@ -159,18 +217,96 @@ public class XmlDataExtracter {
             
             eventType = parser.next();
         }
-        
-		return customers;
 	}
 	
-	public static ArrayList<Movie> extractMovies(String xmlFIle) throws XmlPullParserException, IOException{
+	private void extractArtists(String artistsXmlFilePath) throws XmlPullParserException, IOException {
+		
+		XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+        XmlPullParser parser = factory.newPullParser();
+
+        InputStream is = new FileInputStream(artistsXmlFilePath);
+        parser.setInput(is, null);
+
+        int eventType = parser.getEventType();
+
+        String currentTag = null, 
+               name = null,
+               birthDate = null,
+               birthPlace = null,
+               picture = null,
+               biography = null;
+        
+        int artistID = -1;
+        
+        while (eventType != XmlPullParser.END_DOCUMENT) 
+        {
+           if(eventType == XmlPullParser.START_TAG) 
+           {
+              currentTag = parser.getName();
+              
+              if (currentTag.equals("personne") && parser.getAttributeCount() == 1)
+                 artistID = Integer.parseInt(parser.getAttributeValue(0));
+           } 
+           else if (eventType == XmlPullParser.END_TAG) 
+           {                              
+              currentTag = null;
+              
+              if (parser.getName().equals("personne") && artistID >= 0)
+              {
+                 //TODO INSERT HERE
+            	  
+            	 Date currentBirthDate = null;
+            	
+				 try {
+					 if(birthDate != null)
+						 currentBirthDate = new SimpleDateFormat("yyyy-MM-dd").parse(birthDate);
+				 } catch (ParseException e) {
+				 	e.printStackTrace();
+				 }
+				 
+	        	 Artist artist = new Artist(artistID, name, currentBirthDate, birthPlace, picture, biography);
+	        	 allArtists.put(artist.getId(), artist);
+	        	  
+	             artistID = -1;
+	             name = null;
+	             birthDate = null;
+	             birthPlace = null;
+	             picture = null;
+	             biography = null;
+              }
+           }
+           else if (eventType == XmlPullParser.TEXT && artistID >= 0) 
+           {
+              if (currentTag != null)
+              {                                    
+                 if (currentTag.equals("nom"))
+                    name = parser.getText();
+                 else if (currentTag.equals("anniversaire"))
+                    birthDate = parser.getText();
+                 else if (currentTag.equals("lieu"))
+                    birthPlace = parser.getText();
+                 else if (currentTag.equals("photo"))
+                    picture = parser.getText();
+                 else if (currentTag.equals("bio"))
+                    biography = parser.getText();
+              }              
+           }
+           
+           eventType = parser.next();            
+        }
+	}
 	
-		ArrayList<Movie> movies = new ArrayList<Movie>();
+	private void extractMovies(String moviesXmlFilePath) throws XmlPullParserException, IOException{
+		
+		HashSet<String> languageHashSet = new HashSet<String>();
+		HashSet<String> movieGenreHashSet = new HashSet<String>();
+		HashSet<String>	countryHashSet = new HashSet<String>();
+		HashSet<String>	scriptwriterHashSet = new HashSet<String>();
 		
 		XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
 	    XmlPullParser parser = factory.newPullParser();
 	
-	    InputStream is = new FileInputStream(xmlFIle);
+	    InputStream is = new FileInputStream(moviesXmlFilePath);
 	    parser.setInput(is, null);
 	
 	    int eventType = parser.getEventType();
@@ -182,17 +318,17 @@ public class XmlDataExtracter {
 	           actor = null,
 	           characterName = null,
 	           director = null,
-	           synposis = null;
+	           synopsis = null;
 	    
 	    ArrayList<String> countries = new ArrayList<String>();
 	    ArrayList<String> genres = new ArrayList<String>();
-	    ArrayList<String> scriptwritters = new ArrayList<String>();
+	    ArrayList<String> scriptwriters = new ArrayList<String>();
 	    ArrayList<Role> roles = new ArrayList<Role>();         
 	    ArrayList<String> trailers = new ArrayList<String>();
 	    
 	    int id = -1,
 	        year = -1,
-	        lenght = -1,
+	        length = -1,
 	        roleID = -1,
 	        directorID = -1;
 	    
@@ -215,15 +351,74 @@ public class XmlDataExtracter {
 	          
 	          if (parser.getName().equals("film") && id >= 0)
 	          {
-	        	 ArrayList<MovieGenre> movieGenres = generateMovieGenres(genres);
+	        	 ArrayList<MovieGenre> movieGenres = new ArrayList<MovieGenre>();
+	        	 ArrayList<Country> productionCountries = new ArrayList<Country>();
+	        	 ArrayList<Artist> movieCast = new ArrayList<Artist>();
+	        	 ArrayList<MovieRole> movieRoles = new ArrayList<MovieRole>();
+	        	 ArrayList<Scriptwriter> scriptwritersInMovie = new ArrayList<Scriptwriter>();
+	        	 ArrayList<Trailer> movieTrailers = new ArrayList<Trailer>();
 	        	 
+	        	 for(String genre : genres){
+	        		 
+	        		 if(genre == null)
+	        			 continue;
+	        		 
+	        		 movieGenreHashSet.add(genre);
+	        		 movieGenres.add(new MovieGenre(genre));
+	        	 }
+	        	 
+	        	 for(String country : countries){
+	        		 
+	        		 if(country == null)
+	        			 continue;
+	        		 
+	        		 countryHashSet.add(country);
+	        		 productionCountries.add(new Country(country));
+	        	 }
+	        	 
+	        	 for(Role role : roles){
+	        		 
+	        		 Artist movieActor = allArtists.get(role.id);
+	        		 MovieRole movieRole = new MovieRole(MovieRole.MovieRoleType.Actor, role.personnage, movieActor);
+	        		 
+	        		 movieCast.add(movieActor);
+	        		 movieRoles.add(movieRole);
+	        		 this.allMovieRoles.put(role.id, movieRole);
+	        	 }
+	        	 
+	        	 for(String scriptwriter : scriptwriters){
+	        		 
+	        		 if(scriptwriter == null)
+	        			 continue;
+	        		 
+	        		 scriptwriterHashSet.add(scriptwriter);
+	        		 scriptwritersInMovie.add(new Scriptwriter(scriptwriter));
+	        	 }
+	        	 
+	        	 for(String trailerLink : trailers){
+	        		 
+	        		 if(trailerLink == null)
+	        			 continue;
+	        		 
+	        		 movieTrailers.add(new Trailer(trailerLink));
+	        	 }
+	        	 
+        		 if(language != null)
+        			 languageHashSet.add(language);
+	        	 
+	        	 Artist directorArtist = allArtists.get(directorID);
+	        	 MovieRole directorMovieRole = new MovieRole(MovieRole.MovieRoleType.Director, null, directorArtist);
+	        	 
+	        	 Movie movie = new Movie(id, title, year, productionCountries, new Language(language), length, movieGenres, directorMovieRole, scriptwritersInMovie, movieRoles, movieTrailers, poster, synopsis);
+	        	 
+	        	 allMovies.put(id, movie);
 	             id = -1;
 	             year = -1;
-	             lenght = -1;
+	             length = -1;
 	             title = null;                                 
 	             language = null;                  
 	             poster = null;
-	             synposis = null;
+	             synopsis = null;
 	             director = null;
 	             actor = null;
 	             characterName = null;
@@ -231,7 +426,7 @@ public class XmlDataExtracter {
 	             roleID = -1;
 	             
 	             genres.clear();
-	             scriptwritters.clear();
+	             scriptwriters.clear();
 	             roles.clear();
 	             trailers.clear();  
 	             countries.clear();
@@ -257,15 +452,15 @@ public class XmlDataExtracter {
 	             else if (currentTag.equals("langue"))
 	                language = parser.getText();
 	             else if (currentTag.equals("duree"))                 
-	                lenght = Integer.parseInt(parser.getText());
+	                length = Integer.parseInt(parser.getText());
 	             else if (currentTag.equals("resume"))                 
-	                synposis = parser.getText();
+	                synopsis = parser.getText();
 	             else if (currentTag.equals("genre"))
 	                genres.add(parser.getText());
 	             else if (currentTag.equals("realisateur"))
 	                director = parser.getText();
 	             else if (currentTag.equals("scenariste"))
-	                scriptwritters.add(parser.getText());
+	                scriptwriters.add(parser.getText());
 	             else if (currentTag.equals("acteur"))
 	                actor = parser.getText();
 	             else if (currentTag.equals("personnage"))
@@ -279,19 +474,17 @@ public class XmlDataExtracter {
 	       
 	       eventType = parser.next();            
 	    }
-        
-		return movies;
-	}
-
-	private static ArrayList<MovieGenre> generateMovieGenres(ArrayList<String> genres) {
-		
-		ArrayList<MovieGenre> movieGenres = new ArrayList<MovieGenre>();
-		
-		for(String genre : genres){
-			
-			movieGenres.add(new MovieGenre(genre));
-		}
-		
-		return movieGenres;
+	    
+	    for(String movieGenre : movieGenreHashSet)
+	    	this.allMovieGenres.add(new MovieGenre(movieGenre));
+	    
+	    for(String originLanguage : languageHashSet)
+	    	this.allLanguages.add(new Language(originLanguage));
+	    
+	    for(String country : countryHashSet)
+	    	this.allCountries.add(new Country(country));
+	    
+	    for(String scriptwriter : scriptwriterHashSet)
+	    	this.allScriptwriters.add(new Scriptwriter(scriptwriter));
 	}
 }

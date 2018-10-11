@@ -1,9 +1,9 @@
 
-public class MovieGenre {
+public class Scriptwriter {
 
 	private String name;
 	
-	public MovieGenre(String name) {
+	public Scriptwriter(String name) {
 		
 		this.name = name;
 	}
