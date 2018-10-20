@@ -9,13 +9,13 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 
 import com.koreanunited.webflix.model.Address;
 import com.koreanunited.webflix.model.Artist;
 import com.koreanunited.webflix.model.Country;
 import com.koreanunited.webflix.model.CreditCard;
+import com.koreanunited.webflix.model.CreditCardType;
 import com.koreanunited.webflix.model.Customer;
 import com.koreanunited.webflix.model.Employee;
 import com.koreanunited.webflix.model.Language;
@@ -29,11 +29,9 @@ import com.koreanunited.webflix.model.Scriptwriter;
 import com.koreanunited.webflix.model.SubscriptionPlan;
 import com.koreanunited.webflix.model.Trailer;
 
-import oracle.net.aso.c;
-import oracle.sql.CLOB;
-
 public class DatabaseClient {
 
+	private static DatabaseClient instance;
 	private Connection connection;
 	private String host;
 	private String username;
@@ -41,7 +39,7 @@ public class DatabaseClient {
 	private int port;
 	private String ssid;
 	
-	public DatabaseClient(String host, String username, String password, int port, String ssid) throws SQLException {
+	/*public DatabaseClient(String host, String username, String password, int port, String ssid) throws SQLException {
 		
 		this.host = host;
 		this.username = username;
@@ -50,6 +48,32 @@ public class DatabaseClient {
 		this.ssid = ssid;
 				
 		connect();
+	}*/
+	
+	private DatabaseClient() throws SQLException {
+		
+		this.host = "log660ora12c.logti.etsmtl.ca";
+		this.username = "equipe7";
+		this.password = "r74w84K3";
+		this.port = 1521;
+		this.ssid = "LOG660";
+				
+		connect();
+	}
+	
+	public static DatabaseClient getIntance() {
+		
+		if(instance == null) {
+			try {
+				
+				instance = new DatabaseClient();
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return instance;
 	}
 	
 	private void connect() throws SQLException{
@@ -143,6 +167,24 @@ public class DatabaseClient {
 		statement.close();
 		
 		return insertedRowID;
+	}
+	
+	public Address getAddress(int addressId) throws SQLException {
+		
+		Address address = null;
+		
+		PreparedStatement addressStatement = connection.prepareStatement("SELECT * FROM Address WHERE Address.AddressID = ?");
+		addressStatement.setInt(1, addressId);
+		
+		ResultSet addressResult = addressStatement.executeQuery();
+		
+		if(addressResult.next())
+			address = new Address(addressResult.getInt("CivicNumber"), addressResult.getString("Street"), addressResult.getString("City"), addressResult.getString("Province"), addressResult.getString("PostalCode"));
+		
+		addressResult.close();
+		addressStatement.close();
+		
+		return address;
 	}
 	
 	//================================================================================
@@ -319,6 +361,40 @@ public class DatabaseClient {
 		return exists;
 	}
 	
+	public CreditCard getCreditCard(String creditCardId) throws SQLException {
+		
+		CreditCard creditCard = null;
+		
+		PreparedStatement creditCardStatement = connection.prepareStatement("SELECT * FROM CreditCard WHERE CreditCard.CreditCardID = ?");
+		creditCardStatement.setString(1, creditCardId);
+		
+		ResultSet creditCardResult = creditCardStatement.executeQuery();
+		
+		if(creditCardResult.next()) {
+			
+			int creditCardTypeId = creditCardResult.getInt("CreditCardTypeID");
+			String creditCardNumber = creditCardResult.getString("CreditCardID");
+			int expiryMonth = creditCardResult.getInt("ExpiryMonth"); 
+			int expiryYear = creditCardResult.getInt("ExpiryYear");
+			
+			PreparedStatement creditCardTypeStatement = connection.prepareStatement("SELECT * FROM CreditCardType WHERE CreditCardType.CreditCardTypeID = ?");
+			creditCardTypeStatement.setInt(1, creditCardTypeId);
+			
+			ResultSet creditCardTypeResult = creditCardTypeStatement.executeQuery();
+			creditCardTypeResult.next();
+			
+			creditCard = new CreditCard(new CreditCardType(CreditCardType.ECreditCardType.valueOf(creditCardTypeResult.getString("TypeName"))), creditCardNumber, expiryMonth, expiryYear);
+			
+			creditCardTypeResult.close();
+			creditCardTypeStatement.close();
+		}
+		
+		creditCardResult.close();
+		creditCardStatement.close();
+		
+		return creditCard;
+	}
+	
 	//================================================================================
     // Customer
     //================================================================================
@@ -387,6 +463,54 @@ public class DatabaseClient {
 		System.out.println("@@@@@@@@@ Finished inserting " + count + "/" + customers.size() + " customers @@@@@@@@@");
 	}
 	
+	public Customer getCustomer(String username, String password) throws SQLException {
+		
+		Customer customer = null;
+		
+		PreparedStatement personStatement = connection.prepareStatement("SELECT * FROM Person WHERE Person.Email = ? AND Person.UserPassword = ?");
+		personStatement.setString(1, username);
+		personStatement.setString(2, password);
+		
+		ResultSet resultPerson = personStatement.executeQuery();
+		
+		if(resultPerson.next()) {
+			
+			int userId = resultPerson.getInt("UserID");
+			String firstName = resultPerson.getString("FirstName");
+			String lastName = resultPerson.getString("LastName");
+			Date birthDate  = resultPerson.getDate("BirthDate");
+			String email = resultPerson.getString("Email");
+			String phoneNumber = resultPerson.getString("PhoneNumber");
+			String userPassword = resultPerson.getString("UserPassword");
+			int addressId = resultPerson.getInt("AddressID");
+					
+			PreparedStatement customerStatement = connection.prepareStatement("SELECT * FROM Customer WHERE Customer.UserID = ?");
+			customerStatement.setInt(1, userId);
+			
+			ResultSet resultCustomer = customerStatement.executeQuery();
+			
+			if(resultCustomer.next()) {
+				
+				int subscriptionPlanId =  resultCustomer.getInt("SubscriptionPlanID");
+				String creditCardId = resultCustomer.getString("CreditCardID");
+				
+				Address address = getAddress(addressId);
+				CreditCard creditCard = getCreditCard(creditCardId);
+				SubscriptionPlan subscriptionPlan =  getSubscriptionPlan(subscriptionPlanId);
+				
+				customer = new Customer(userId, firstName, lastName, email, address, birthDate, phoneNumber, userPassword, subscriptionPlan, creditCard);
+			}
+			
+			resultCustomer.close();
+			customerStatement.close();
+		}
+		
+		personStatement.close();
+		resultPerson.close();
+		
+		return customer;
+	}
+	
 	//================================================================================
     // Employee
     //================================================================================
@@ -436,6 +560,11 @@ public class DatabaseClient {
 		existsResultSet.close();
 		
 		return exists;
+	}
+	
+	public Employee getEmployee(String username, String password) {
+		
+		return null;
 	}
 	
 	//================================================================================
@@ -993,6 +1122,27 @@ public class DatabaseClient {
 		//System.out.println("Inserted Subscription Plan with id = " + insertedRowID);
 		
 		return insertedRowID;
+	}
+	
+	public SubscriptionPlan getSubscriptionPlan(int subscriptionPlanId) throws SQLException {
+		
+		SubscriptionPlan subscriptionPlan =  null;
+		
+		PreparedStatement subscriptionPlanStatement = connection.prepareStatement("SELECT * FROM SubscriptionPlan WHERE SubscriptionPlan.SubscriptionPlanID = ?");
+		subscriptionPlanStatement.setInt(1, subscriptionPlanId);
+		
+		ResultSet subscriptionPlanResult = subscriptionPlanStatement.executeQuery();
+		subscriptionPlanResult.next();
+		
+		subscriptionPlan = new SubscriptionPlan(SubscriptionPlan.SubscriptionPlanType.valueOf(subscriptionPlanResult.getString("PlanName")), 
+				subscriptionPlanResult.getDouble("MonthlyCost"), 
+				subscriptionPlanResult.getInt("MaxRent"), 
+				subscriptionPlanResult.getInt("MaxRentDuration"));
+		
+		subscriptionPlanResult.close();
+		subscriptionPlanStatement.close();
+		
+		return subscriptionPlan;
 	}
 	
 	//================================================================================

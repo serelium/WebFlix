@@ -15,7 +15,7 @@ public class DataInsertion {
 		
 		try {
 			
-			DatabaseClient dbClient = new DatabaseClient("log660ora12c.logti.etsmtl.ca", "equipe7", "r74w84K3", 1521, "LOG660");
+			DatabaseClient dbClient = DatabaseClient.getIntance();
 			XmlDataExtractor xmlData = new XmlDataExtractor("data/customers.xml", "data/artists.xml", "data/movies.xml");
 			
 			ArrayList<Customer> customers = new ArrayList<Customer>(xmlData.getCustomers().values());
