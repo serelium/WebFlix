@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.Hibernate;
+
 import com.koreanunited.webflix.model.Address;
 import com.koreanunited.webflix.model.Artist;
 import com.koreanunited.webflix.model.Country;
@@ -59,6 +61,7 @@ public class DatabaseClient {
 		this.ssid = "LOG660";
 				
 		connect();
+		
 	}
 	
 	public static DatabaseClient getIntance() {

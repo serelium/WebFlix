@@ -6,17 +6,21 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "DomainLanguage")
+@Table(name = "domainlanguage")
 public class Language {
 
+	@Id
+	@Column(name = "languagename")
 	private String name;
 	
-	@Id
-	@Column(name = "LanguageName")
 	public String getName() { return name; }
 	
 	public void setName(String name) { this.name = name; }
 
+	public Language() {
+		
+	}
+	
 	public Language(String name) {
 		
 		this.name = name;

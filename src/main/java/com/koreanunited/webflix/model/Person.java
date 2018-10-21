@@ -1,17 +1,19 @@
 package com.koreanunited.webflix.model;
-import java.util.Date;
 
-import javax.persistence.CascadeType;
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 @Entity
-@Table(name = "Person")
+@Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "person")
 public abstract class Person {
 
 	private int userId;
@@ -24,29 +26,29 @@ public abstract class Person {
 	private Address address;
 	
 	@Id
-	@Column(name = "UserID")
+	@Column(name = "userid")
 	public int getUserId() { return userId; }
 
-	@Column(name = "FirstName", nullable = false)
+	@Column(name = "firstname", nullable = false)
 	public String getFirstName() { return firstName; }
 
-	@Column(name = "LastName", nullable = false)
+	@Column(name = "lastname", nullable = false)
 	public String getLastName() { return lastName; }
 
-	@Column(name = "Email", nullable = false)
+	@Column(name = "email", nullable = false)
 	public String getEmail() { return email; }
 
-	@OneToOne
-	@JoinColumn(name = "AddressID")
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "addressid")
 	public Address getAddress() { return address; }
 
-	@Column(name = "BirthDate", nullable = false)
+	@Column(name = "birthdate", nullable = false)
 	public Date getBirthDate() { return birthDate; }
 
-	@Column(name = "PhoneNumber", nullable = false)
+	@Column(name = "phonenumber", nullable = false)
 	public String getPhoneNumber() { return phoneNumber; }
 
-	@Column(name = "UserPassword", nullable = false)
+	@Column(name = "userpassword", nullable = false)
 	public String getPassword() { return password; }
 	
 	public void setUserId(int userId) { this.userId = userId; }

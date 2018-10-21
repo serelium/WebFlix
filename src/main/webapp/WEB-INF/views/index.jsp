@@ -8,7 +8,7 @@
 	<link rel="stylesheet" href="/resources/css/style.css">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Insert title here</title>
+<title>WebFlix title here</title>
 </head>
 <body>
 

@@ -110,6 +110,8 @@ public class Movie {
 	public void setPosterLink(String posterLink) { this.posterLink = posterLink; }
 
 	public void setSynopsis(String synopsis) { this.synopsis = synopsis; }
+	
+	
 
 	public Movie(int id,
 			 String title,

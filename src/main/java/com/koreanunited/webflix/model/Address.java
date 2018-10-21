@@ -6,7 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Address")
+@Table(name = "address")
 public class Address {
 
 	private int id;
@@ -17,22 +17,22 @@ public class Address {
 	private String postalCode;
 	
 	@Id
-	@Column(name = "UserID")
+	@Column(name = "addressid")
 	public int getId() { return id; }
 	
-	@Column(name = "CivicNumber", nullable = false)
+	@Column(name = "civicnumber", nullable = false)
 	public int getCivicNumber() { return civicNumber;	}
 
-	@Column(name = "Street", nullable = false)
+	@Column(name = "street", nullable = false)
 	public String getStreet() {	return street; }
 
-	@Column(name = "City", nullable = false)
+	@Column(name = "city", nullable = false)
 	public String getCity() { return city; }
 
-	@Column(name = "Province", nullable = false)
+	@Column(name = "province", nullable = false)
 	public String getProvince() { return province; }
 
-	@Column(name = "PostalCode", nullable = false)
+	@Column(name = "postalcode", nullable = false)
 	public String getPostalCode() { return postalCode; }
 
 	public void setId(int id) { this.id = id; }
@@ -47,6 +47,11 @@ public class Address {
 
 	public void setPostalCode(String postalCode) { this.postalCode = postalCode; }
 
+	
+	public Address(){
+		
+	}
+	
 	public Address(int civicNumber, String street, String city, String province, String postalCode){
 		
 		this.civicNumber =  civicNumber;
