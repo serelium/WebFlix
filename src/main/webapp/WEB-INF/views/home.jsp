@@ -4,7 +4,7 @@
 <html>
 <head>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-	<link rel="icon" href="/resources/img/webflix-icon.png">
+	<link rel="icon" href="/resources/img/webflix-icon-transparent-background.png">
 	<link rel="stylesheet" href="/resources/css/style.css">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -13,9 +13,10 @@
 
 <body>
 <!--Navbar-->
-<nav class="navbar navbar-expand-lg navbar-dark teal lighten-2 mb-4">
+<nav class="navbar navbar-expand-lg lighten-2">
 
-  <span class="navbar-toggler-icon"></span>
+  <img src="/resources/img/webflix-logo.png" class="left" height="10%" width="10%">
+  <!--<span class="navbar-toggler-icon"></span>-->
   <span class="glyphicon glyphicon-search"></span>
 
   <!-- Collapsible content -->

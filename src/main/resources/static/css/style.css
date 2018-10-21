@@ -29,3 +29,22 @@ body { background: black !important; } /* Adding !important forces the browser t
    background-color:transparent !important;
    border:none !important;
 }
+
+input[type="text"], textarea {
+	
+	outline: none;
+	box-shadow:none !important;
+	border:1px solid black !important;
+}
+
+@media (min-width: 768px) {
+  .navbar-nav {
+    float: left;
+    margin: 0;
+    margin-left: -15px;
+  }
+}
+
+.navbar-nav {
+    margin: 0 -15px;
+}
