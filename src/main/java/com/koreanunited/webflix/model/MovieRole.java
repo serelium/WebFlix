@@ -5,34 +5,40 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.GenerationTime;
 
 @Entity
-@Table(name = "MovieRole")
+@Table(name = "movierole")
 public class MovieRole {
 
 	private int id;
 	private MovieRoleType type;
 	private String characterName;
 	private Artist artist;
+	private Movie movie;
 	
 	@Id
-	@Column(name = "MovieRoleID")
+	@Column(name = "movieroleid")
 	public int getId() { return id; }
 	
 	@ManyToOne
-	@JoinColumn(name = "RoleType", nullable = false)
+	@JoinColumn(name = "roletype", nullable = false)
 	public MovieRoleType getType() { return type; }
 	
-	@Column(name = "CharacterName")
+	@Column(name = "charactername")
 	public String getCharacterName() { return characterName; }
 	
 	@ManyToOne
-	@JoinColumn(name = "ArtistID", nullable = false)
+	@JoinColumn(name = "artistid", nullable = false)
 	public Artist getArtist() {	return artist; }
+	
+	@ManyToOne
+	@JoinColumn(name = "movieid")
+	public Movie getMovie() { return movie; };
 
 	public void setId(int id) { this.id = id; }
 
@@ -41,7 +47,13 @@ public class MovieRole {
 	public void setCharacterName(String characterName) { this.characterName = characterName; }
 
 	public void setArtist(Artist artist) { this.artist = artist; }
+	
+	public void setMovie(Movie movie) { this.movie = movie; }
 
+	public MovieRole() {
+		
+	}
+	
 	public MovieRole(MovieRoleType type, String characterName, Artist artist){
 		
 		this.type = type;

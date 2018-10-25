@@ -6,17 +6,21 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Country")
+@Table(name = "country")
 public class Country {
 
 	private String name;
 	
 	@Id
-	@Column(name = "CountryName")
+	@Column(name = "countryname")
 	public String getName() { return name; }
 	
 	public void setName(String name) { this.name = name; }
 
+	public Country(){
+		
+	}
+	
 	public Country(String name){
 		
 		this.name = name;

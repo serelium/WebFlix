@@ -1,88 +1,84 @@
 package com.koreanunited.webflix.model;
-import java.util.ArrayList;
+
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Movie")
+@Table(name = "movie")
 public class Movie {
 
 	private int id;
 	private String title;
 	private int yearOfRelease;
-	private ArrayList<Country> productionCountries;
+	private List<Country> productionCountries;
 	private Language originLanguage;
 	private int length;
-	private ArrayList<MovieGenre> genres;
-	private MovieRole director;
-	private ArrayList<Scriptwriter> scriptwriters;
-	private ArrayList<MovieRole> cast;
-	private ArrayList<Trailer> trailers;
+	private List<MovieGenre> genres;
+	private List<Scriptwriter> scriptwriters;
+	private List<MovieRole> artists;
+	private List<Trailer> trailers;
 	private String posterLink;
 	private String synopsis;
 	
 	@Id
-	@Column(name = "MovieID")
+	@Column(name = "movieid")
 	public int getId() { return id; }
 	
-	@Column(name = "Title")
+	@Column(name = "title")
 	public String getTitle() { return title; }
 
-	@Column(name = "YearOfRelease")
+	@Column(name = "yearofrelease")
 	public int getYearOfRelease() {	return yearOfRelease; }
 
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinTable(
-			   name="Movie_Countries",
-			   joinColumns = @JoinColumn(name="MovieID", referencedColumnName="MovieID"),
-			   inverseJoinColumns = @JoinColumn(name="Country", referencedColumnName="CountryName"))
+			   name="movie_countries",
+			   joinColumns = @JoinColumn(name="movieid", referencedColumnName="movieid"),
+			   inverseJoinColumns = @JoinColumn(name="country", referencedColumnName="countryname"))
 	public List<Country> getProductionCountries() { return productionCountries; }
 
 	@ManyToOne
-	@JoinColumn(name = "LanguageName")
+	@JoinColumn(name = "originlanguage" , referencedColumnName="languagename")
 	public Language getOriginLanguage() { return originLanguage; }
 
-	@Column(name = "MovieLength")
+	@Column(name = "movielength")
 	public int getLength() { return length; }
 
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinTable(
-			   name="MovieGenre",
-			   joinColumns = @JoinColumn(name="MovieID", referencedColumnName="MovieID"),
-			   inverseJoinColumns = @JoinColumn(name="MovieGenreName", referencedColumnName="MovieGenreName"))
+			   name="moviegenre",
+			   joinColumns = @JoinColumn(name="movieid", referencedColumnName="movieid"),
+			   inverseJoinColumns = @JoinColumn(name="moviegenrename", referencedColumnName="moviegenrename"))
 	public List<MovieGenre> getGenres() { return genres; }
-
-	@OneToOne
-	public MovieRole getDirector() { return director; }
 
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinTable(
-			   name="Movie_Scriptwriters",
-			   joinColumns = @JoinColumn(name="MovieID", referencedColumnName="MovieID"),
-			   inverseJoinColumns = @JoinColumn(name="ScriptwriterName", referencedColumnName="FullName"))
+			   name="movie_scriptwriters",
+			   joinColumns = @JoinColumn(name="movieid", referencedColumnName="movieid"),
+			   inverseJoinColumns = @JoinColumn(name="scriptwritername", referencedColumnName="fullname"))
 	public List<Scriptwriter> getScriptwriters() { return scriptwriters; }
 
-	@OneToMany
-	public List<MovieRole> getCast() { return cast; }
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "movie")
+	public List<MovieRole> getArtists() { return artists; }
 
-	@OneToMany
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "movie")
 	public List<Trailer> getTrailers() { return trailers; }
 
-	@Column(name = "PosterLink")
+	@Column(name = "posterlink")
 	public String getPosterLink() { return posterLink; }
 
-	@Column(name = "Synopsis")
+	@Column(name = "synopsis")
 	public String getSynopsis() { return synopsis; }
 	
 	public void setId(int id) { this.id = id; }
@@ -91,39 +87,38 @@ public class Movie {
 
 	public void setYearOfRelease(int yearOfRelease) { this.yearOfRelease = yearOfRelease; }
 
-	public void setProductionCountries(ArrayList<Country> productionCountries) { this.productionCountries = productionCountries; }
+	public void setProductionCountries(List<Country> productionCountries) { this.productionCountries = productionCountries; }
 
 	public void setOriginLanguage(Language originLanguage) { this.originLanguage = originLanguage; }
 
 	public void setLength(int length) { this.length = length; }
 
-	public void setGenres(ArrayList<MovieGenre> genres) { this.genres = genres; }
+	public void setGenres(List<MovieGenre> genres) { this.genres = genres; }
 
-	public void setDirector(MovieRole director) { this.director = director; }
+	public void setScriptwriters(List<Scriptwriter> scriptwriters) { this.scriptwriters = scriptwriters; }
 
-	public void setScriptwriters(ArrayList<Scriptwriter> scriptwriters) { this.scriptwriters = scriptwriters; }
+	public void setArtists(List<MovieRole> artists) { this.artists = artists; }
 
-	public void setCast(ArrayList<MovieRole> cast) { this.cast = cast; }
-
-	public void setTrailers(ArrayList<Trailer> trailers) { this.trailers = trailers; }
+	public void setTrailers(List<Trailer> trailers) { this.trailers = trailers; }
 
 	public void setPosterLink(String posterLink) { this.posterLink = posterLink; }
 
 	public void setSynopsis(String synopsis) { this.synopsis = synopsis; }
 	
-	
+	public Movie() {
+		
+	}
 
 	public Movie(int id,
 			 String title,
 			 int yearOfRelease,
-			 ArrayList<Country> productionCountries,
+			 List<Country> productionCountries,
 			 Language originLanguage,
 			 int length,
-			 ArrayList<MovieGenre> genres,
-			 MovieRole director,
-			 ArrayList<Scriptwriter> scriptwriters,
-			 ArrayList<MovieRole> cast,
-			 ArrayList<Trailer> trailers,
+			 List<MovieGenre> genres,
+			 List<Scriptwriter> scriptwriters,
+			 List<MovieRole> cast,
+			 List<Trailer> trailers,
 			 String posterLink,
 			 String synopsis) {
 				
@@ -134,9 +129,8 @@ public class Movie {
 				this.originLanguage = originLanguage;
 				this.length = length;
 				this.genres = genres;
-				this.director = director;
 				this.scriptwriters = scriptwriters;
-				this.cast = cast;
+				this.artists = cast;
 				this.trailers = trailers;
 				this.posterLink = posterLink;
 				this.synopsis = synopsis;

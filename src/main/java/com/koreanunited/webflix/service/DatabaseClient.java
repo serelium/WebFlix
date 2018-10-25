@@ -791,11 +791,7 @@ public class DatabaseClient {
 		statement.close();
 		
 		insertMovieGenres(movie.getGenres(), movie);
-		
-		if(movie.getDirector().getArtist() != null)
-			insertMovieRole(movie.getDirector(), movie);
-		
-		insertMovieRoles(movie.getCast(), movie);
+		insertMovieRoles(movie.getArtists(), movie);
 		insertMovieCountries(movie.getProductionCountries(), movie);
 		insertMovieScriptwriters(movie.getScriptwriters(), movie);
 		insertTrailers(movie.getTrailers(), movie);
@@ -1109,7 +1105,7 @@ public class DatabaseClient {
 	public int insertSubscriptionPlan(SubscriptionPlan subscriptionPlan) throws SQLException {
 		 
 		PreparedStatement statement = connection.prepareStatement("INSERT INTO SubscriptionPlan (PlanName, MonthlyCost, MaxRent, MaxRentDuration) VALUES (?, ?, ?, ?)");
-		statement.setString(1, subscriptionPlan.getType());
+		statement.setString(1, subscriptionPlan.getType().name());
 		statement.setDouble(2, subscriptionPlan.getMontlyCost());
 		statement.setInt(3, subscriptionPlan.getMaxRent());
 		statement.setInt(4, subscriptionPlan.getMaxRentDuration());

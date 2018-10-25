@@ -16,14 +16,14 @@ public class DataInsertion {
 		try {
 			
 			DatabaseClient dbClient = DatabaseClient.getIntance();
-			XmlDataExtractor xmlData = new XmlDataExtractor("data/customers.xml", "data/artists.xml", "data/movies.xml");
+			XmlDataExtractor xmlData = new XmlDataExtractor("C:\\Users\\Phantom\\workspace\\WebFlix\\src\\main\\resources\\static\\data\\customers.xml", "C:\\Users\\Phantom\\workspace\\WebFlix\\src\\main\\resources\\static\\data\\artists.xml", "C:\\Users\\Phantom\\workspace\\WebFlix\\src\\main\\resources\\static\\data\\movies.xml");
 			
 			ArrayList<Customer> customers = new ArrayList<Customer>(xmlData.getCustomers().values());
 			ArrayList<Artist> artists = new ArrayList<Artist>(xmlData.getArtists().values());
 			ArrayList<Movie> movies = new ArrayList<Movie>(xmlData.getMovies().values());
 			
-			dbClient.insertCustomers(customers);
-			dbClient.insertArtists(artists);
+			//dbClient.insertCustomers(customers);
+			//dbClient.insertArtists(artists);
 			dbClient.insertMovies(movies);
 			System.out.println("Done");
 			

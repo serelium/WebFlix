@@ -48,3 +48,7 @@ input[type="text"], textarea {
 .navbar-nav {
     margin: 0 -15px;
 }
+
+.fa-search{
+	color: #fff;
+}

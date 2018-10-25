@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Artist")
+@Table(name = "artist")
 public class Artist {
 
 	private int id;
@@ -19,22 +19,22 @@ public class Artist {
 	
 
 	@Id
-	@Column(name = "ArtistID")
+	@Column(name = "artistid")
 	public int getId() { return id; }
 
-	@Column(name = "ArtistName", nullable = false)
+	@Column(name = "artistname", nullable = false)
 	public String getName() { return name; }
 
-	@Column(name = "BirthDate")
+	@Column(name = "birthdate")
 	public Date getBirthDate() { return birthDate; }
 
-	@Column(name = "BirthPlace")
+	@Column(name = "birthplace")
 	public String getBirthPlace() {	return birthPlace; }
 
-	@Column(name = "PictureLink")
+	@Column(name = "picturelink")
 	public String getPictureLink() { return pictureLink; }
 
-	@Column(name = "Biography")
+	@Column(name = "biography")
 	public String getBiography() { return biography; }
 	
 	public void setId(int id) { this.id = id; }
@@ -49,6 +49,11 @@ public class Artist {
 
 	public void setBiography(String biography) { this.biography = biography; }
 
+	
+	public Artist() {
+		
+	}
+	
 	public Artist(int id, String name, Date birthDate, String birthPlace, String pictureLink, String biography) {
 		
 		this.id = id;

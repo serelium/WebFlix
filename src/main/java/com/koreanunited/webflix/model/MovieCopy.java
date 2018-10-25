@@ -8,24 +8,28 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "MovieCopy")
+@Table(name = "moviecopy")
 public class MovieCopy {
 
 	private int code;
 	private Movie movie;
 	
 	@Id
-	@Column(name = "MovieCopyID")
+	@Column(name = "movieCopyid")
 	public int getCode() { return code; }
 	
 	@ManyToOne
-	@JoinColumn(name = "MovieID")
+	@JoinColumn(name = "movieid")
 	public Movie getMovie() { return movie; }
 	
 	public void setCode(int code) { this.code = code; }
 
 	public void setMovie(Movie movie) { this.movie = movie; }
 
+	public MovieCopy() {
+		
+	}
+	
 	public MovieCopy(int code, Movie movie) {
 		
 		this.code = code;

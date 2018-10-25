@@ -1,19 +1,23 @@
 package com.koreanunited.webflix.service;
 
-import java.sql.SQLException;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.koreanunited.webflix.model.Customer;
 import com.koreanunited.webflix.model.Person;
+import com.koreanunited.webflix.repository.CustomerRepository;
 
 @Service
 public class LoginService {
 
-	public boolean validateUser(String username, String password) {
+	@Autowired
+	CustomerRepository customerRepository;
+	
+	public Customer validateUser(String username, String password) {
 
 		Person person = null;
 		
-		try {
+		/*try {
 			
 			DatabaseClient dbClient = DatabaseClient.getIntance();
 			
@@ -26,8 +30,11 @@ public class LoginService {
 				
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
+		}*/
 		
-		return person != null;
+
+		Customer customer = customerRepository.findByEmail(username);
+		
+		return customer;
 	}
 }

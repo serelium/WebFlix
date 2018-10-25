@@ -1,10 +1,14 @@
 package com.koreanunited.webflix.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -15,20 +19,20 @@ public class CreditCard {
 	private String number;
 	private int expiryMonth;
 	private int expiryYear;
-	
 
 	@Id
-	@Column(name = "CreditCardID")
+	@Column(name = "creditcardid")
 	public String getNumber() { return number; }
 
-	@ManyToOne
-	@JoinColumn(name = "CreditCardTypeID", nullable = false)
+	@OneToOne(fetch = FetchType.LAZY,
+            cascade =  CascadeType.ALL)
+	@JoinColumn(name = "creditcardtypeid")
 	public CreditCardType getType() { return type; }
 	
-	@Column(name = "ExpiryMonth", nullable = false)
+	@Column(name = "expirymonth", nullable = false)
 	public int getExpiryMonth() { return expiryMonth; }
 
-	@Column(name = "ExpiryYear", nullable = false)
+	@Column(name = "expiryyear", nullable = false)
 	public int getExpiryYear() { return expiryYear; }
 
 	public void setType(CreditCardType type) { this.type = type; }
@@ -38,6 +42,10 @@ public class CreditCard {
 	public void setExpiryMonth(int expiryMonth) { this.expiryMonth = expiryMonth; }
 
 	public void setExpiryYear(int expiryYear) { this.expiryYear = expiryYear; }
+
+	public CreditCard() {
+		
+	}
 
 	public CreditCard(CreditCardType type, String number, int expiryMonth, int expiryYear) {
 

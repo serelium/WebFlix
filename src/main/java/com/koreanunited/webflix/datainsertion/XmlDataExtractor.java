@@ -370,7 +370,7 @@ public class XmlDataExtractor {
 	          {
 	        	 ArrayList<MovieGenre> movieGenres = new ArrayList<MovieGenre>();
 	        	 ArrayList<Country> productionCountries = new ArrayList<Country>();
-	        	 ArrayList<Artist> movieCast = new ArrayList<Artist>();
+	        	 ArrayList<Artist> movieArtists = new ArrayList<Artist>();
 	        	 ArrayList<MovieRole> movieRoles = new ArrayList<MovieRole>();
 	        	 ArrayList<Scriptwriter> scriptwritersInMovie = new ArrayList<Scriptwriter>();
 	        	 ArrayList<Trailer> movieTrailers = new ArrayList<Trailer>();
@@ -398,7 +398,7 @@ public class XmlDataExtractor {
 	        		 Artist movieActor = allArtists.get(role.id);
 	        		 MovieRole movieRole = new MovieRole(new MovieRoleType(MovieRoleType.EMovieRoleType.Actor), role.personnage, movieActor);
 	        		 
-	        		 movieCast.add(movieActor);
+	        		 movieArtists.add(movieActor);
 	        		 movieRoles.add(movieRole);
 	        		 this.allMovieRoles.put(role.id, movieRole);
 	        	 }
@@ -426,7 +426,13 @@ public class XmlDataExtractor {
 	        	 Artist directorArtist = allArtists.get(directorID);
 	        	 MovieRole directorMovieRole = new MovieRole(new MovieRoleType(MovieRoleType.EMovieRoleType.Director), null, directorArtist);
 	        	 
-	        	 Movie movie = new Movie(id, title, year, productionCountries, new Language(language), length, movieGenres, directorMovieRole, scriptwritersInMovie, movieRoles, movieTrailers, poster, synopsis);
+	        	 if(directorArtist != null) {
+	        		 
+	        		 movieArtists.add(directorArtist);
+	        	 	movieRoles.add(directorMovieRole);
+	        	 }
+	        	 
+	        	 Movie movie = new Movie(id, title, year, productionCountries, new Language(language), length, movieGenres, scriptwritersInMovie, movieRoles, movieTrailers, poster, synopsis);
 	        	 
 	        	 allMovies.put(id, movie);
 	             id = -1;

@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link rel="stylesheet" href="/resources/css/bootstrap.css">
 	<link rel="icon" href="/resources/img/webflix-icon.png">
 	<link rel="stylesheet" href="/resources/css/style.css">
     <meta charset="utf-8">
@@ -16,7 +16,7 @@
 	<div class="container fill">
 	    <div class="row align-items-center h-100">
 	        <div class="col-6 mx-auto">
-	        <img src="/resources/img/webflix-logo-2.png" class="center">
+	        <img src="/resources/img/webflix-logo-1.png" class="center">
 	            <div class="jumbotron">
 					<h3 class="text-center">Login</h3>
 					<br>
@@ -33,7 +33,7 @@
 							<input type="password" name="password" class="form-control" placeholder="Password">
 						</div>
 						
-						<button type="submit" class="btn btn-danger form-control">Login</button>
+						<button type="submit" class="btn btn-primary form-control">Login</button>
 					</form>
 				</div>
 			</div>

@@ -9,8 +9,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
+
 @Entity
-@Table(name = "Rent")
+@Table(name = "rent")
 public class Rent {
 
 	private int id;
@@ -19,18 +22,19 @@ public class Rent {
 	private Date rentTime;
 	
 	@Id
-	@Column(name = "RentID")
+	@Generated(GenerationTime.ALWAYS)
+	@Column(name = "rentid")
 	public int getId() { return id; }
 	
 	@ManyToOne
-	@JoinColumn(name = "UserID")
+	@JoinColumn(name = "userid")
 	public Customer getCustomer() { return customer; }
 	
 	@OneToOne
-	@JoinColumn(name = "MovieCopyID")
+	@JoinColumn(name = "moviecopyid")
 	public MovieCopy getMovieCopy() { return movieCopy; }
 
-	@Column(name = "RentTime")
+	@Column(name = "renttime")
 	public Date getRentTime() {	return rentTime; }
 	
 	public void setId(int id) { this.id = id; }
@@ -41,6 +45,10 @@ public class Rent {
 
 	public void setRentTime(Date rentTime) { this.rentTime = rentTime; }
 
+	public Rent() {
+		
+	}
+	
 	public Rent(Customer customer, MovieCopy movieCopy, Date rentTime){
 		
 		this.customer = customer;

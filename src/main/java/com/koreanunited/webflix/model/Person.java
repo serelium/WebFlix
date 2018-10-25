@@ -10,6 +10,9 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.transaction.Transactional;
+
+import org.springframework.context.annotation.Scope;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -39,6 +42,7 @@ public abstract class Person {
 	public String getEmail() { return email; }
 
 	@OneToOne(fetch = FetchType.LAZY)
+	@Transactional
 	@JoinColumn(name = "addressid")
 	public Address getAddress() { return address; }
 
@@ -67,6 +71,10 @@ public abstract class Person {
 
 	public void setAddress(Address address) { this.address = address; }
 
+	public Person() {
+		
+	}
+	
 	public Person(int userId, String firstName, String lastName, String email, Address address, Date birthDate, String phoneNumber, String password) {
 		
 		this.userId = userId;
