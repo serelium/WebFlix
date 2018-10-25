@@ -1,20 +1,23 @@
 DROP TABLE MovieRole PURGE;
 DROP TABLE DomainMovieRole PURGE;
-DROP TABLE Artist PURGE;
-DROP TABLE ProductionCountry PURGE;
-DROP TABLE DomainCountry PURGE;
-DROP TABLE Rent PURGE;
+/*DROP TABLE Artist PURGE;
+DROP TABLE Rent PURGE;*/
 DROP TABLE MovieCopy PURGE;
 DROP TABLE MovieGenre PURGE;
 DROP TABLE DomainMovieGenre PURGE;
+DROP TABLE Movie_Scriptwriters PURGE;
+DROP TABLE Movie_Countries PURGE;
+DROP TABLE Scriptwriter PURGE;
+DROP TABLE Trailer PURGE;
 DROP TABLE Movie PURGE;
+DROP TABLE Country PURGE;
 DROP TABLE DomainLanguage PURGE;
 /*DROP TABLE Customer PURGE;
 DROP TABLE SubscriptionPlan PURGE;
 DROP TABLE CreditCard PURGE;
-DROP TABLE CreditCardType PURGE;*/
+DROP TABLE CreditCardType PURGE;
 DROP TABLE Employee PURGE;
-/*DROP TABLE Person PURGE;
+DROP TABLE Person PURGE;
 DROP TABLE Address PURGE;*/
 
 SET SERVEROUTPUT ON;
@@ -54,11 +57,10 @@ CREATE TABLE CreditCardType
 
 CREATE TABLE CreditCard
 (
-    CreditCardID        INT PRIMARY KEY,
+    CreditCardID        VARCHAR2(16) PRIMARY KEY,
 	CreditCardTypeID	INT NOT NULL,
 	ExpiryMonth		    INT NOT NULL,
 	ExpiryYear	        INT NOT NULL,
-	CVV	                INT NOT NULL,
     FOREIGN KEY (CreditCardTypeID) REFERENCES CreditCardType(CreditCardTypeID),
     CONSTRAINT CHK_ExpiryMonth CHECK (ExpiryMonth > 0 AND ExpiryMonth <= 12)
 );
@@ -76,59 +78,85 @@ CREATE TABLE Customer
 (
     UserID              INT PRIMARY KEY,
 	SubscriptionPlanID  INT NOT NULL,
-    CreditCardID        INT NOT NULL,
+    CreditCardID        VARCHAR2(16) NOT NULL,
     FOREIGN KEY (UserID) REFERENCES Person(UserID),
     FOREIGN KEY (SubscriptionPlanID) REFERENCES SubscriptionPlan(SubscriptionPlanID),
     FOREIGN KEY (CreditCardID) REFERENCES CreditCard(CreditCardID)
-);*/
+);
 
 CREATE TABLE Employee
 (
     UserID              INT PRIMARY KEY,
 	RegeristrationID    INT NOT NULL UNIQUE,
     FOREIGN KEY (UserID) REFERENCES Person(UserID),
-    CONSTRAINT CHK_RegeristrationID CHECK (REGEXP_LIKE(RegeristrationID, '^[a-zA-Z0-9_]{7}$'))
-);
+    CONSTRAINT CHK_RegeristrationID CHECK (REGEXP_LIKE(RegeristrationID, '^\d{7}$'))
+);*/
 
 CREATE TABLE DomainLanguage
 (
-    MovieLanguage VARCHAR(25) PRIMARY KEY
+    LanguageName VARCHAR(25) PRIMARY KEY
+);
+
+CREATE TABLE Country
+(
+    CountryName VARCHAR(25) PRIMARY KEY
+);
+
+CREATE TABLE Scriptwriter
+(
+    FullName       VARCHAR2(50) PRIMARY KEY
 );
 
 CREATE TABLE Movie
 (
-    MovieID         INT PRIMARY KEY,
-    Title           VARCHAR(40) NOT NULL,
-    YearOfRelease   INT NOT NULL,
-    MovieLength     INT NOT NULL,
-    OriginLanguage  VARCHAR(25) NOT NULL,
-    scriptwritters  VARCHAR(500) NOT NULL,
-    Synopsis        VARCHAR(500) NOT NULL,
-    FOREIGN KEY (OriginLanguage) REFERENCES DomainLanguage(MovieLanguage)
+    MovieID             INT PRIMARY KEY,
+    Title               VARCHAR(200) NOT NULL,
+    YearOfRelease       INT NOT NULL,
+    MovieLength         INT NOT NULL,
+    OriginLanguage      VARCHAR(25),
+    PosterLink          VARCHAR2(1000),
+    Synopsis            VARCHAR2(4000 CHAR),
+    FOREIGN KEY (OriginLanguage) REFERENCES DomainLanguage(LanguageName)
+);
+
+CREATE TABLE Trailer
+(
+    TrailerID   INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    TrailerLink VARCHAR2(500),
+    MovieID     INT REFERENCES Movie(MovieID)
+);
+
+CREATE TABLE Movie_Scriptwriters
+(
+    ScriptwriterName   VARCHAR2(50) REFERENCES Scriptwriter(FullName),
+    MovieID             INT REFERENCES Movie(MovieID)
+);
+
+CREATE TABLE Movie_Countries
+(
+    Country    VARCHAR2(25) REFERENCES Country(CountryName),
+    MovieID    INT REFERENCES Movie(MovieID)
 );
 
 CREATE TABLE DomainMovieGenre
 (
-    MovieGenre VARCHAR(25) PRIMARY KEY
+    MovieGenreName VARCHAR(25) PRIMARY KEY
 );
 
 CREATE TABLE MovieGenre
 (
-    MovieGenreID    INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    MovieGenreName  VARCHAR2(25) NOT NULL,
-    MovieID         INT NOT NULL,
-    FOREIGN KEY (MovieGenreName) REFERENCES DomainMovieGenre(MovieGenre),
-    FOREIGN KEY (MovieID) REFERENCES Movie(MovieID)
+    MovieGenreName  VARCHAR2(25) REFERENCES DomainMovieGenre(MovieGenreName),
+    MovieID         INT REFERENCES Movie(MovieID)
 );
 
 CREATE TABLE MovieCopy
 (
-    MovieCopyID             INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    MovieCopyID             INT PRIMARY KEY,
 	MovieID                 INT NOT NULL,
     FOREIGN KEY (MovieID)   REFERENCES Movie(MovieID)
 );
 
-CREATE TABLE Rent
+/*CREATE TABLE Rent
 (
     RentID          INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	MovieCopyID     INT NOT NULL,
@@ -138,28 +166,15 @@ CREATE TABLE Rent
     FOREIGN KEY (MovieCopyID) REFERENCES MovieCopy(MovieCopyID)
 );
 
-CREATE TABLE DomainCountry
-(
-    Country VARCHAR(25) PRIMARY KEY NOT NULL
-);
-
-CREATE TABLE ProductionCountry
-(
-    ProductionCountryID INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    ProductionCountryName VARCHAR(25) NOT NULL,
-    MovieID INT NOT NULL,
-    FOREIGN KEY (ProductionCountryName) REFERENCES DomainCountry(Country),
-    FOREIGN KEY (MovieID) REFERENCES Movie(MovieID)
-);
-
 CREATE TABLE Artist
 (
-    ArtistID    INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	ArtistName   VARCHAR2(25) NOT NULL,
-    BirthDate   DATE NOT NULL,
-    BirthPlace  VARCHAR2(25) NOT NULL,
-    FOREIGN KEY (BirthPlace) REFERENCES DomainCountry(Country)
-);
+    ArtistID    INT PRIMARY KEY,
+	ArtistName  VARCHAR2(100) NOT NULL,
+    BirthDate   DATE,
+    BirthPlace  VARCHAR2(100),
+    PictureLink VARCHAR2(400),
+    Biography   CLOB
+);*/
 
 CREATE TABLE DomainMovieRole
 (
@@ -170,7 +185,7 @@ CREATE TABLE MovieRole
 (
     MovieRoleID     INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	RoleType        VARCHAR2(25) NOT NULL,
-    CharacterName   VARCHAR2(25),
+    CharacterName   VARCHAR2(200),
     ArtistID        INT NOT NULL,
     MovieID         INT NOT NULL,
     FOREIGN KEY (RoleType) REFERENCES DomainMovieRole(MovieRole),
@@ -178,7 +193,7 @@ CREATE TABLE MovieRole
     FOREIGN KEY (MovieID) REFERENCES Movie(MovieID)
 );
 
-/*CREATE OR REPLACE TRIGGER ValidateInsertPerson
+CREATE OR REPLACE TRIGGER ValidateInsertPerson
 BEFORE INSERT OR UPDATE OF BirthDate ON Person FOR EACH ROW
 DECLARE
     MonthsBetween NUMBER;
@@ -206,7 +221,7 @@ CREATE OR REPLACE TRIGGER CreditCardValidation
             RAISE_APPLICATION_ERROR(-20000, 'Credit card expired.');
         END IF;
     END;
-/*/
+/
 
 CREATE OR REPLACE TRIGGER CheckIfCanRentMovie
 BEFORE INSERT OR UPDATE OF MovieCopyID ON Rent FOR EACH ROW
@@ -304,8 +319,10 @@ BEGIN
 
 END;
 /
+INSERT INTO DomainMovieRole (MovieRole) VALUES ('Actor');
+INSERT INTO DomainMovieRole (MovieRole) VALUES ('Director');
 
-/*INSERT INTO CreditCardType (TypeName) VALUES ('Visa');
+INSERT INTO CreditCardType (TypeName) VALUES ('Visa');
 INSERT INTO CreditCardType (TypeName) VALUES ('MasterCard');
-INSERT INTO CreditCardType (TypeName) VALUES ('YeOldCard');*/
+
 COMMIT;
