@@ -23,17 +23,17 @@ public class Customer extends Person{
 	private CreditCard creditCard;
 	private List<Rent> rents;
 	
-	@OneToOne(fetch = FetchType.LAZY,
+	@OneToOne(fetch = FetchType.EAGER,
             cascade =  CascadeType.ALL)
 	@JoinColumn(name= "subscriptionplanid")
 	public SubscriptionPlan getSubscription() { return subscriptionPlan; }
 
-	@OneToOne(fetch = FetchType.LAZY,
+	@OneToOne(fetch = FetchType.EAGER,
             cascade =  CascadeType.ALL)
 	@JoinColumn(name= "creditcardid")
 	public CreditCard getCreditCard() { return creditCard; }
 
-	@OneToMany(fetch = FetchType.LAZY,
+	@OneToMany(fetch = FetchType.EAGER,
             cascade =  CascadeType.ALL)
 	@JoinColumn(name= "rentid")
 	public List<Rent> getRents() { return rents; }

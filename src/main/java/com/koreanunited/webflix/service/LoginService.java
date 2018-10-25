@@ -34,6 +34,9 @@ public class LoginService {
 		
 
 		Customer customer = customerRepository.findByEmail(username);
+		customer.getSubscription();
+		customer.getAddress();
+		customer.getCreditCard();
 		
 		return customer;
 	}

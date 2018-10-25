@@ -30,9 +30,9 @@ public class MovieController {
     	
     	Customer customer = (Customer) session.getAttribute("customer");
     	
+    	
     	MovieCopy  movieCopy = rentService.RentMovie(id, customer);
     	
     	return "you just rented";
-    	
-    	}
+    }
 }
