@@ -52,3 +52,9 @@ input[type="text"], textarea {
 .fa-search{
 	color: #fff;
 }
+
+* {
+  -webkit-border-radius: 0 !important;
+     -moz-border-radius: 0 !important;
+          border-radius: 0 !important;
+}

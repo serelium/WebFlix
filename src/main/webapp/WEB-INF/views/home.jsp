@@ -1,3 +1,4 @@
+<%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
@@ -13,33 +14,33 @@
 </head>
 
 <body>
-<!--Navbar-->
-<nav class="navbar navbar-expand-lg lighten-2">
+	<nav class="navbar navbar-expand-lg lighten-2">
+	
+	  <img src="/resources/img/webflix-logo-1.png" class="left" height="10%" width="10%">
+	  <!--<span class="navbar-toggler-icon"></span>-->
+	  <span class="glyphicon glyphicon-search"></span>
+	
+	  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+	    <!-- Search form -->
+	    <form class="form-inline ml-auto">
+	    
+	      <div class="md-form my-0" style="border:1px solid white">
+	      	<i class="fa fa-search ml-1" style="color:#FFF;"></i>
+	        <input class="form-control mr-sm-2 transparent-input" type="text" placeholder="Search" style="color:white">
+	      </div>
+	     
+	    </form>
+	    
+	    <form method="post" class="ml-2">
+			<button type="submit" class="btn btn-primary form-control">Logout</button>
+	    </form>
+	    
+	  </div>
+	</nav>
 
-  <img src="/resources/img/webflix-logo-1.png" class="left" height="10%" width="10%">
-  <!--<span class="navbar-toggler-icon"></span>-->
-  <span class="glyphicon glyphicon-search"></span>
-
-  <!-- Collapsible content -->
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <!-- Search form -->
-    <form class="form-inline ml-auto">
-    
-      <div class="md-form my-0" style="border:1px solid white">
-      	<i class="fa fa-search ml-1" style="color:#FFF;"></i>
-        <input class="form-control mr-sm-2 transparent-input" type="text" placeholder="Search" style="color:white">
-      </div>
-     
-    </form>
-    
-    <form method="post" class="ml-2">
-		<button type="submit" class="btn btn-primary form-control">Logout</button>
-    </form>
-    
-  </div>
-  <!-- Collapsible content -->
-</nav>
-<!--/.Navbar-->
+	<c:forEach items="${movies}" var="movie">
+   		<a href="/movie/${movie.getId()}" style="color: white;">${movie.getTitle()}</a><br>
+	</c:forEach>
 	
 </body>
 </html>

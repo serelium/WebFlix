@@ -15,7 +15,7 @@ public class MovieCopy {
 	private Movie movie;
 	
 	@Id
-	@Column(name = "movieCopyid")
+	@Column(name = "moviecopyid")
 	public int getCode() { return code; }
 	
 	@ManyToOne
