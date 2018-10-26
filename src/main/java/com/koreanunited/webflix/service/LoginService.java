@@ -33,10 +33,7 @@ public class LoginService {
 		}*/
 		
 
-		Customer customer = customerRepository.findByEmail(username);
-		customer.getSubscription();
-		customer.getAddress();
-		customer.getCreditCard();
+		Customer customer = customerRepository.findByEmailAndPassword(username, password);
 		
 		return customer;
 	}

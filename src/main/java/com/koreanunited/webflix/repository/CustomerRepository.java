@@ -5,5 +5,5 @@ import com.koreanunited.webflix.model.Customer;
 
 public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 
-	public Customer findByEmail(String email);
+	public Customer findByEmailAndPassword(String email, String password);
 }

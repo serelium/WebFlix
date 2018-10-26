@@ -21,12 +21,11 @@
 	  <span class="glyphicon glyphicon-search"></span>
 	
 	  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-	    <!-- Search form -->
-	    <form class="form-inline ml-auto">
+	    <form class="form-inline ml-auto" action="/search">
 	    
 	      <div class="md-form my-0" style="border:1px solid white">
 	      	<i class="fa fa-search ml-1" style="color:#FFF;"></i>
-	        <input class="form-control mr-sm-2 transparent-input" type="text" placeholder="Search" style="color:white">
+	        <input class="form-control mr-sm-2 transparent-input" type="text" name="searchQuery" placeholder="Search" style="color:white">
 	      </div>
 	     
 	    </form>

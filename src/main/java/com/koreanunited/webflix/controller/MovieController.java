@@ -33,6 +33,10 @@ public class MovieController {
     	
     	MovieCopy  movieCopy = rentService.RentMovie(id, customer);
     	
-    	return "you just rented";
+    	if(movieCopy != null)
+    		return "you just rented";
+    	
+    	else
+    		return "rien";
     }
 }
