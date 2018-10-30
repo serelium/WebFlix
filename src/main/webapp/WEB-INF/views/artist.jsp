@@ -32,7 +32,6 @@
 	    <form method="post" class="ml-2">
 			<button type="submit" class="btn btn-primary form-control">Logout</button>
 	    </form>
-	    
 	  </div>
 	</nav>
 	

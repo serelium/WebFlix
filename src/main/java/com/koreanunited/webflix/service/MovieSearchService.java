@@ -76,10 +76,10 @@ public class MovieSearchService {
     			List<MovieRole> movieRoles = new ArrayList<MovieRole>();
     			List<Country> countries = countryRepository.findRegexName(query.trim());
     			List<MovieGenre> movieGenres = movieGenreRepository.findRegexName(query.trim());
-    			Language language = languageRepository.findRegexName(query.trim());
+    			List<Language> languages = languageRepository.findRegexName(query.trim());
     			
     			
-    			if(language != null)
+    			for(Language language : languages)
     				movies.addAll(movieRepository.findByOriginLanguage(language));
     			
     			for(Artist artist : artists)
