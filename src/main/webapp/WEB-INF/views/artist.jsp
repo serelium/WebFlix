@@ -10,9 +10,8 @@
 	<link rel="icon" href="/resources/img/webflix-icon.png">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Home</title>
+<title>${artist.getName()}</title>
 </head>
-
 <body>
 	<nav class="navbar navbar-expand-lg lighten-2">
 	
@@ -37,26 +36,13 @@
 	  </div>
 	</nav>
 	
-	<c:choose>
-		<c:when test="${empty movies}">
-			<div class="container fill">
-	    		<div class="row align-items-center h-100">
-	        		<div class="col-6 mx-auto">
-	           			 <div class="jumbotron">
-							<h3 class="text-center">Sorry there are no movies matching your query!</h3>
-						</div>
-					</div>
-				</div>
-			</div>
-		</c:when>
-		<c:otherwise>
-			<div class="container fill mt-5 ml-6">
- 				<c:forEach items="${movies}" var="movie">
-   					<a href="/movie/${movie.getId()}" style="color: white;">${movie.getTitle()} (${movie.getYearOfRelease()})</a><br>
-				</c:forEach>
-			</div>
-		</c:otherwise>
-	</c:choose>
-	
+	<div class="container fill mt-5">	
+	<h3 style="color: white;">${artist.getName()}</h3>
+		<p style="color: white;">
+			Birthday: <span style="color: #999999">${artist.getBirthDate()}</span><br>
+			Place of birth: <span style="color: #999999"> ${artist.getBirthPlace()}</span><br>
+			Biography: <span style="color: #999999">${artist.getBiography()}</span><br>
+		</p>
+	</div>
 </body>
 </html>

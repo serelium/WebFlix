@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.koreanunited.webflix.model.Artist;
+import com.koreanunited.webflix.model.Movie;
 import com.koreanunited.webflix.model.MovieRole;
 
 public interface MovieRoleRepository extends JpaRepository<MovieRole, Integer>{

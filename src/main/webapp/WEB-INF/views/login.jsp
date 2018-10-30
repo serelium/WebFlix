@@ -11,8 +11,6 @@
 	<title>WebFlix</title>
 </head>
 <body>
-
-
 	<div class="container fill">
 	    <div class="row align-items-center h-100">
 	        <div class="col-6 mx-auto">

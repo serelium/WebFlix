@@ -58,3 +58,7 @@ input[type="text"], textarea {
      -moz-border-radius: 0 !important;
           border-radius: 0 !important;
 }
+
+p {
+  color: white important!;
+}

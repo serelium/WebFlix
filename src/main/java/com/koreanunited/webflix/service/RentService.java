@@ -1,9 +1,6 @@
 package com.koreanunited.webflix.service;
 
-import java.sql.Time;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
@@ -52,7 +49,6 @@ public class RentService {
 				rentRepository.save(new Rent(customer, movieCopyRented, date));
 			}
 		}
-		
 		
 		return movieCopyRented;
 	}
