@@ -99,6 +99,17 @@
 		</c:choose>
 	</c:forEach>
 	
+	<c:forEach items="${suggestedMovies}" var="suggestedMovie" varStatus="status">
+		<c:choose>
+			<c:when test="${status.first}">
+				<c:set var = "suggestedMovie" value = "${suggestedMovie.getTitle()}"/>
+  			</c:when>
+			<c:otherwise>
+  				<c:set var = "scriptwritersStr" value = "${scriptwriters}, ${scriptwriter.getName()}"/>
+  			</c:otherwise>
+		</c:choose>
+	</c:forEach>
+	
 	<div class="container fill mt-5">
 		<h3 style="color: white;">${movie.getTitle()}</h3>
 		<p style="color: white;">
@@ -116,6 +127,16 @@
 		 <form method="post" class="ml-0" style="width: 7%;">
 			<button type="submit" class="btn btn-primary form-control">Rent</button>
 	    </form>
+	    <br>
+	    <br>
+	    <br>
+	    <h3 style="color: white;">You Might Also Like</h3>
+	    <p style="color: white;">
+	    	<c:forEach items="${suggestedMovies}" var="suggestedMovie" varStatus="status">
+	    		<a href="/movie/${suggestedMovie.getId()}" style="color: white;">${suggestedMovie.getTitle()} (${suggestedMovie.getYearOfRelease()})</a><br>
+	    	</c:forEach>
+	    </p>
+	    
 	</div>
 	
 </body>

@@ -1,5 +1,7 @@
 package com.koreanunited.webflix.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import com.koreanunited.webflix.model.Customer;
 import com.koreanunited.webflix.model.Movie;
 import com.koreanunited.webflix.model.MovieCopy;
+import com.koreanunited.webflix.service.AnalyticsService;
 import com.koreanunited.webflix.service.MovieSearchService;
 import com.koreanunited.webflix.service.RentService;
 
@@ -26,6 +29,9 @@ public class MovieController {
 	
 	@Autowired
 	MovieSearchService movieSearchService;
+	
+	@Autowired
+	AnalyticsService analyticsService;
 	
     @RequestMapping(value="/movie/{id}", method = RequestMethod.POST)
     public String rentMovie(HttpSession session, ModelMap model, @PathVariable("id") int id){
@@ -47,8 +53,10 @@ public class MovieController {
     public String showMoviePage(HttpSession session, ModelMap model, @PathVariable("id") int id){
     	
     	Movie movie = movieSearchService.searchMovie(id);
+    	List<Movie> suggestedMovies = analyticsService.getSuggestedMovies(movie.getId(), (Customer) session.getAttribute("customer"));
     	
     	model.put("movie", movie);
+    	model.put("suggestedMovies", suggestedMovies);
     	
 		return "movie";
     }

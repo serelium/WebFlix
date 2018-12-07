@@ -25,4 +25,7 @@ public interface MovieRepository extends JpaRepository<Movie, Integer>, MovieRep
 	
 	@Query(nativeQuery = true, value="select * from Movie full Join where REGEXP_LIKE(title, ?1, 'i')")
 	public List<Movie> findByQuery();
+	
+	@Query(nativeQuery = true, value="SELECT IDFILM, SUM(cote)*(1/COUNT(IDCLIENT)) AS rj FROM LOG6601C.COTES@db_link GROUP BY IDFILM")
+	public Integer countByFilter();
 }

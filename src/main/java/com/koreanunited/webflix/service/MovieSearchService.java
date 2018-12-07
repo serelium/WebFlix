@@ -48,6 +48,7 @@ public class MovieSearchService {
 	
 	public List<Movie> searchMoviesFasterVersion(String searchQuery){
 		
+		long startTime = System.currentTimeMillis();
 		HashMap<Integer, Movie> allMovies = new HashMap<Integer, Movie>();
     	
     	String[] splitQuery = searchQuery.split(";");
@@ -118,6 +119,7 @@ public class MovieSearchService {
 			}
     	});
     	
+    	System.out.println(System.currentTimeMillis() - startTime);
 		return sortedMovies;
 	}
 	
@@ -167,5 +169,10 @@ public class MovieSearchService {
 	public Movie searchMovie(int id){
 		
 		return movieRepository.findOne(id);
+	}
+	
+	public List<Movie> searchMovies(List<Integer> ids){
+		
+		return movieRepository.findAll(ids);
 	}
 }

@@ -62,3 +62,12 @@ input[type="text"], textarea {
 p {
   color: white important!;
 }
+
+#stylized input{
+    display: block;
+    font-size:11px;
+    padding:4px 2px;
+    border:solid 1px #aacfe4;
+    width:70px;
+    margin:2px 0 20px 10px;
+}
